@@ -48,3 +48,13 @@
     width: 100%;  /* 모바일에서는 1등분 */
   }
 }
+.linkButton{
+  text-decoration: none;
+  padding : 10px;
+  color : rgb(190, 190, 190);
+}
+.linkButton:hover{
+  color: #dddddd;       /* 마우스 오버 시 색상 변경 */
+  font-weight: bold;
+  font-family: sans-serif;
+}

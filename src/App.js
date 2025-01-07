@@ -1,41 +1,64 @@
 import { useState } from 'react'
 import './App.css'
-import {Navbar, Container, Nav} from 'react-bootstrap';
+import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
+import Detail from './routes/Detail';
+import {Routes, Route, Link ,useNavigate, Outlet} from 'react-router-dom';
+
+
 function App() {
 
   let [shoes] = useState(data);
+  let navigate = useNavigate();
   
   return (
     <>
       <div>
+{/* ------navbar------ */}
+
         <Navbar bg="black" data-bs-theme="dark">
           <Container>
             <Navbar.Brand href="#home">React Store</Navbar.Brand>
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#features">products</Nav.Link>
-              <Nav.Link href="#pricing">items</Nav.Link>
+              <Link className="linkButton" to="/">홈</Link>
+              <Link className="linkButton" to="/detail">Detail</Link>
+              {/* 
+              navigate함수임! : 페이지를 이동시켜준다
+              <button onClick={()=>{navigate('/detail')}} className="linkButton">Detail</button> */}
             </Nav>
           </Container>
         </Navbar>
 
-      <div className="main-bg"></div>
-      <div className="image-gallery">
-        {
-          shoes.map(function(a, i) {
-            return (
-              <div key={i} className="image-item">
-                <Card data={shoes[i]} i={i+1} />
-              </div>
-            )
-          })
-        }
-      </div>
+{/* ------라우터------ */}
+
+        <Routes>
+          <Route path="/" element={
+            <div>
+              <div className="main-bg"></div>
+                <div className="image-gallery">
+                  {
+                    shoes.map(function(a, i) {
+                      return (
+                        <div key={i} className="image-item">
+                          <Card data={shoes[i]} i={i+1} />
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+            </div>
+            }/>
+          <Route path="/detail" element={<Detail/>}/>
+
+        </Routes>
+
+      
     </div>
     </>
   )
 }
+
+{/* ------Card컴포넌트------ */}
 
 function Card(props){
     return(
