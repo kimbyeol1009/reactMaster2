@@ -5,11 +5,12 @@ import data from './data';
 import Detail from './routes/Detail';
 import Event from './routes/Event';
 import {Routes, Route, Link ,useNavigate, Outlet} from 'react-router-dom';
-
+import axios from 'axios';
 
 function App() {
 
-  let [shoes] = useState(data);
+  let [shoes, setShoes] = useState(data);
+  let [originData] = useState(data);
   let navigate = useNavigate();
   
   return (
@@ -32,34 +33,54 @@ function App() {
         </Navbar>
         <Link to = "/event"></Link>
 {/* ------라우터------ */}
-
+        <button onClick={()=>{
+          let copy = [...shoes];
+          copy.sort((a,b)=> a.title.toUpperCase() < b.title.toUpperCase()? -1 : 1);
+          setShoes(copy);
+        }}
+        >가나다순 정렬</button>
+        <button onClick={()=>{
+          setShoes(originData);
+        }}>되돌리기</button>
         <Routes>
           <Route path="/" element={
             <div>
               <div className="main-bg"></div>
                 <div className="image-gallery">
-                  {
-                    shoes.map(function(a, i) {
-                      return (
-                        <div key={i} className="image-item">
-                          <Card data={shoes[i]} i={i+1} />
-                        </div>
-                      )
-                    })
-                  }
+                  {shoes.map(function(a, i) {
+                    return (
+                      <div key={i} className="image-item">
+                        <Card data={shoes[i]} i={i+1} />
+                      </div>)})}
                 </div>
+                <button onClick={()=>{
+                  axios.get('https://codingapple1.github.io/shop/data2.json')
+                  .then((결과)=>{
+                    console.log(결과.data);
+                    let shoe = [...shoes];
+                    setShoes(shoe.concat(결과.data))
+                  })
+                  .catch(()=>{
+                    console.log('실패함ㅅㄱ');
+                  })
+
+                }}>버튼</button>
             </div>
-            }/>
-          <Route path="/detail" element={<Detail/>}/>
+          }/>
+          <Route path="/detail/:id" element={<Detail shoe={shoes}/>}>
+          </Route>
+          
+         
+
           {/* Nested Routes : 태그안에 태그가 들어간 라우터 형식, /about/member, /about/location 을 뜻함 */}
           <Route path="/about" element={<About/>}>
             <Route path ="member" element={<div>멤버임</div>}/>
             <Route path ="location" element={<div></div>}/>
           </Route>
+
           <Route path="/event" element={<Event/>}>
             <Route path = "one" element={<div>첫 주문시 양배추즙 서비스</div>}></Route>
             <Route path = "two" element={<div>생일기념 쿠폰받기</div>}></Route>
-          
           </Route>
 
         </Routes>
@@ -94,4 +115,4 @@ function Card(props){
     )
   }
 
-export default App
+export default App;
