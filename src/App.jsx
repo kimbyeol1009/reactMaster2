@@ -6,13 +6,16 @@ import Detail from './routes/Detail';
 import Event from './routes/Event';
 import {Routes, Route, Link ,useNavigate, Outlet} from 'react-router-dom';
 import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
 
 function App() {
 
   let [shoes, setShoes] = useState(data);
   let [originData] = useState(data);
   let navigate = useNavigate();
-  
+  let [num, setNum] = useState(2);
+  let [show, setShow] = useState(true);
+  let [loading, setLoading] = useState(<Spinner animation="border" />);
   return (
     <>
       <div>
@@ -53,25 +56,31 @@ function App() {
                         <Card data={shoes[i]} i={i+1} />
                       </div>)})}
                 </div>
+                
+                {show == true? 
                 <button onClick={()=>{
-                  axios.get('https://codingapple1.github.io/shop/data2.json')
+                  setNum(num+1);
+                  axios.get(`https://codingapple1.github.io/shop/data${num}.json`)
                   .then((결과)=>{
                     console.log(결과.data);
-                    let shoe = [...shoes];
-                    setShoes(shoe.concat(결과.data))
+                    let shoe = [...shoes, ...결과.data];
+                    setShoes(shoe);
                   })
-                  .catch(()=>{
+                  .catch((결과)=>{
+                    console.log(결과.data);
+                    if(typeof 결과.data=="undefined"){setShow(false)}
                     console.log('실패함ㅅㄱ');
                   })
-
-                }}>버튼</button>
+                  // 여러개 get요청할때 Promise.all을 쓰면 된다.
+                  // Promise.all([axios.get('/url1'), axios.get('/url2')])
+                  // .then()
+                  // .catch()
+                }}>더보기</button>
+                 : null}
             </div>
           }/>
-          <Route path="/detail/:id" element={<Detail shoe={shoes}/>}>
-          </Route>
+          <Route path="/detail/:id" element={<Detail shoe={shoes}/>}></Route>
           
-         
-
           {/* Nested Routes : 태그안에 태그가 들어간 라우터 형식, /about/member, /about/location 을 뜻함 */}
           <Route path="/about" element={<About/>}>
             <Route path ="member" element={<div>멤버임</div>}/>
