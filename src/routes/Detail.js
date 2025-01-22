@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-
-
+import { Nav } from 'react-bootstrap';
 function Detail(props){
     let [num, setNum] = useState('');
     useEffect(()=>{
@@ -14,6 +13,7 @@ function Detail(props){
     let [alert, setAlert] = useState(true);
     let {id} =  useParams();
     let index =props.shoe.find( function(i){return i.id == id});
+    let [tab, setTab] = useState(0);
     
     return (
       <div className="container">
@@ -30,10 +30,33 @@ function Detail(props){
                   <button className="btn btn-danger">주문하기</button> 
               </div>
           </div>
+
+          <Nav variant="tabs"  defaultActiveKey="link0">
+            <Nav.Item>
+                <Nav.Link eventKey="link0" onClick={()=>{setTab(tab=0)}}>버튼0</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link eventKey="link1" onClick={()=>{setTab(tab=1)}}>버튼1</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link eventKey="link2" onClick={()=>{setTab(tab=2)}}>버튼2</Nav.Link>
+            </Nav.Item>
+        </Nav>
+        <TabContent tab={tab}/>
       </div>
 )
 }
 
+function TabContent(props){
+    if(props.tab==0){
+        return <div>내용0</div>
+    }else if(props.tab==1){
+        return <div>내용1</div>
+    }else if(props.tab==2){
+        return <div>내용2</div> 
+    }
+
+}
 
 
 export default Detail;
