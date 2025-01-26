@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createContext, useState } from 'react'
 import './App.css'
 import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
@@ -7,15 +7,19 @@ import Event from './routes/Event';
 import {Routes, Route, Link ,useNavigate, Outlet} from 'react-router-dom';
 import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
+import Cart from './routes/Cart';
+export let Context1 = createContext();
 
 function App() {
 
   let [shoes, setShoes] = useState(data);
+  let [stock, setStock] = useState([10,11,12]);
   let [originData] = useState(data);
   let navigate = useNavigate();
   let [num, setNum] = useState(2);
   let [show, setShow] = useState(true);
   let [loading, setLoading] = useState(<Spinner animation="border" />);
+
   return (
     <>
       <div>
@@ -53,7 +57,7 @@ function App() {
                   {shoes.map(function(a, i) {
                     return (
                       <div key={i} className="image-item">
-                        <Card data={shoes[i]} i={i+1} />
+                        <Card data={shoes[i]} i={i+1}/>
                       </div>)})}
                 </div>
                 
@@ -79,7 +83,11 @@ function App() {
                  : null}
             </div>
           }/>
-          <Route path="/detail/:id" element={<Detail shoe={shoes}/>}></Route>
+          <Route path="/detail/:id" element={
+            <Context1.Provider value={{stock, shoes}}>
+              <Detail shoe={shoes}/>
+            </Context1.Provider>
+            }></Route>
           
           {/* Nested Routes : 태그안에 태그가 들어간 라우터 형식, /about/member, /about/location 을 뜻함 */}
           <Route path="/about" element={<About/>}>
@@ -92,6 +100,7 @@ function App() {
             <Route path = "two" element={<div>생일기념 쿠폰받기</div>}></Route>
           </Route>
 
+          <Route path="/cart" element={<Cart/>}></Route>
         </Routes>
 
       
@@ -117,7 +126,9 @@ function About(){
 function Card(props){
     return(
       <div className="col-md-4">
-        <img src={'https://codingapple1.github.io/shop/shoes'+props.i+'.jpg'} width="80%" alt="description of the image" />
+        <Link to ={`/detail/${props.i-1}`}>
+        <img src={`https://codingapple1.github.io/shop/shoes${props.i}.jpg`} width="80%" alt="description of the image" />
+        </Link>
         <h4>{props.data.title}</h4>
         <p>{props.data.price}</p>
       </div>

@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
+import {Context1} from "../App";
+
+
 function Detail(props){
+    let {stock, shoes} = useContext(Context1)
     let [num, setNum] = useState('');
+    let [fade2, setFade2] = useState('');
     useEffect(()=>{
+        
         if(isNaN(num)==true){window.alert('그러지마세요'); }
         let timer = setTimeout(()=>{setAlert(alert=false);},3000)
-        return ()=>{clearTimeout(timer)} //타이머 기능 제거해주는 함수이다. return은 기존코드 치워주는건데 백만개 생성될 타이머 밀고 useEffect실행해주세요
+        setFade2('end');
+        return ()=>{clearTimeout(timer); setFade2('end');} //타이머 기능 제거해주는 함수이다. return은 기존코드 치워주는건데 백만개 생성될 타이머 밀고 useEffect실행해주세요
     }
     , [num])
     let [count,setCount] = useState(3);
@@ -14,13 +21,12 @@ function Detail(props){
     let {id} =  useParams();
     let index =props.shoe.find( function(i){return i.id == id});
     let [tab, setTab] = useState(0);
-    
     return (
-      <div className="container">
+        <div className={`container start ${fade2}`}>
         {alert==true ?  <div className="alert alert-warning">{count}초이내 구매시 할인</div> : null}
           <div className="row">
               <div className="col-md-6">
-                  <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" alt="" />
+                  <img src={`https://codingapple1.github.io/shop/shoes${props.i}.jpg`} width="100%" alt="" />
               </div>
               <div className="col-md-6">
                   <h4 className="pt-5">{index.title}</h4>
@@ -47,15 +53,25 @@ function Detail(props){
 )
 }
 
-function TabContent(props){
-    if(props.tab==0){
+function TabContent({tab}){
+   
+    {/* if(props.tab==0){
         return <div>내용0</div>
     }else if(props.tab==1){
         return <div>내용1</div>
     }else if(props.tab==2){
         return <div>내용2</div> 
-    }
-
+    } */}
+    let [fade, setFade]=useState('');
+    useEffect(()=>{
+        setTimeout(()=>{setFade('end');},100)
+        return()=>{
+            setFade('');
+        }
+    }, [tab])
+    return <div className={`start ${fade}`}>
+        {[<div>내용0</div>,<div>내용1</div>,<div>내용2</div>][tab]}
+    </div>
 }
 
 
