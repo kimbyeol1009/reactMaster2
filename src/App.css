@@ -64,3 +64,21 @@
   font-weight: bold;
   font-family: sans-serif;
 }
+.button {
+  margin : 5px;
+  border: none;
+  padding : 5px 10px;
+  font-weight: bold;
+  color : rgb(255, 255, 255);
+  background-color: rgb(255, 177, 81);
+  border-radius: 3px;
+}
+.button2 {
+  margin : 5px;
+  border: none;
+  padding : 5px 10px;
+  font-weight: bold;
+  color : rgb(255, 255, 255);
+  background-color: rgb(255, 81, 81);
+  border-radius: 3px;
+}

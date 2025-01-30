@@ -10,7 +10,7 @@ let user = createSlice({
         },
         changeAge(state,a){
             state.age +=a.payload
-        }
+        },
     }
 }) 
 export let {changeName, changeAge} = user.actions

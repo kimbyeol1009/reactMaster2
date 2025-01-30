@@ -31,6 +31,8 @@ function App() {
             <Nav className="me-auto">
               <Link className="linkButton" to="/">홈</Link>
               <Link className="linkButton" to="/detail">Detail</Link>
+              <Link className="linkButton" to="/cart">cart</Link>
+
               
               {/* 
               navigate함수임! : 페이지를 이동시켜준다
@@ -83,12 +85,44 @@ function App() {
                  : null}
             </div>
           }/>
+          <Route path="/detail" element={
+            <div>
+                <div className="image-gallery">
+                  {shoes.map(function(a, i) {
+                    return (
+                      <div key={i} className="image-item">
+                        <Card data={shoes[i]} i={i+1}/>
+                      </div>)})}
+                </div>
+                
+                {show == true? 
+                <button onClick={()=>{
+                  setNum(num+1);
+                  axios.get(`https://codingapple1.github.io/shop/data${num}.json`)
+                  .then((결과)=>{
+                    console.log(결과.data);
+                    let shoe = [...shoes, ...결과.data];
+                    setShoes(shoe);
+                  })
+                  .catch((결과)=>{
+                    console.log(결과.data);
+                    if(typeof 결과.data=="undefined"){setShow(false)}
+                    console.log('실패함ㅅㄱ');
+                  })
+                  // 여러개 get요청할때 Promise.all을 쓰면 된다.
+                  // Promise.all([axios.get('/url1'), axios.get('/url2')])
+                  // .then()
+                  // .catch()
+                }}>더보기</button>
+                 : null}
+            </div>
+          }/>
           <Route path="/detail/:id" element={
             <Context1.Provider value={{stock, shoes}}>
               <Detail shoe={shoes}/>
             </Context1.Provider>
             }></Route>
-          
+          <Route path="/cart" element={<Cart/>}></Route>
           {/* Nested Routes : 태그안에 태그가 들어간 라우터 형식, /about/member, /about/location 을 뜻함 */}
           <Route path="/about" element={<About/>}>
             <Route path ="member" element={<div>멤버임</div>}/>

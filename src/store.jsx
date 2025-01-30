@@ -15,7 +15,7 @@ import user from "./store/userSlice";
 //     }
 // }) 
 // 2. export해주기
-export let {changeName, changeAge} = user.actions
+// export let {changeName, changeAge} = user.actions
 
 let stock = createSlice({
     name : 'stock',
@@ -26,8 +26,23 @@ let cart = createSlice({
     initialState: [
         {id : 0, name : 'White and Black', count : 2},
         {id : 2, name : 'Grey Yordan', count : 1}
-      ] 
+      ],
+      reducers:{
+          changeCnt(state, action){
+              let item = state.find((item)=>item.id===action.payload)
+              item.count+=1
+          },
+          changeCartCnt(state, action){
+            let {id,name,count} = action.payload
+            let item = state.find((item)=>item.id===id)
+            item.count += count
+        },
+        removeItem(state,action){
+            return state.filter((item)=>item.id!==action.payload)
+        }
+      }
 })
+export let {changeCnt,changeCartCnt,removeItem} = cart.actions
 
 export default configureStore({
     reducer:{
