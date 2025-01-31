@@ -1,7 +1,7 @@
 import React from 'react'
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
-import {changeCnt, removeItem } from '../store';
+import {addCnt, removeItem } from '../store';
 
 const Cart = () => {
   let a = useSelector((state)=>{return state})
@@ -27,7 +27,7 @@ const Cart = () => {
                 <td>{item.name}</td>
                 <td>{item.count}</td>
                 <td>
-                  <button className="button" onClick={(id)=>{dispatch(changeCnt(item.id))}}>+</button>
+                  <button className="button" onClick={(id)=>{dispatch(addCnt(item.id))}}>+</button>
                   <button className="button2"
                   onClick = {(id)=>{dispatch(removeItem(item.id))}}>X</button>
                 </td>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCartCnt, changeCnt } from '../store';
+import { addCartCnt, addCnt } from '../store';
 
 function Detail(props){
     let [num, setNum] = useState('');
@@ -16,6 +16,7 @@ function Detail(props){
     , [num])
     let [count,setCount] = useState(3);
     let [alert, setAlert] = useState(true);
+    let [modal, setModal] = useState(false);
     let {id} =  useParams();
     let index =props.shoe.find( function(i){return i.id == id});
     let [tab, setTab] = useState(0);
@@ -24,7 +25,7 @@ function Detail(props){
       
     return (
         <div className={`container start ${fade2}`}>
-        {alert==true ?  <div className="alert alert-warning">{count}초이내 구매시 할인</div> : null}
+        {alert==true ?  <div className="alert alert-warning my-3 ">{count}초이내 구매시 할인</div> : null}
           <div className="row">
               <div className="col-md-6">
                   <img src={`https://codingapple1.github.io/shop/shoes${index.id+1}.jpg`} width="100%" alt="nope" />
@@ -34,10 +35,15 @@ function Detail(props){
                   <p>{index.content}</p>
                   <p>{index.price}</p>
                   <input onChange={(e)=>{setNum(e.target.value)}} />
-                  <button className="btn btn-danger" onClick={(id)=>{
-                    dispatch(changeCartCnt({id : index.id,count : Number(num)}));
-                    console.log(num);
-                  }}>주문하기</button> 
+                  <button className="btn btn-danger" 
+                  onClick={(id)=>{
+                    dispatch(addCartCnt({id : index.id,name : index.title, count : Number(num)}));
+                    setModal(modal=true);
+                    setTimeout(()=>{setModal(modal=false)},3000);
+                }}>주문하기</button>
+                {
+                  modal == true ? <div className="alert alert-light my-3 col-6">{index.title}가 장바구니에 담겼습니다!</div> : null
+                }
               </div>
           </div>
 

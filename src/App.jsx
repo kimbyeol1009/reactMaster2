@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import './App.css'
 import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
@@ -11,7 +11,9 @@ import Cart from './routes/Cart';
 export let Context1 = createContext();
 
 function App() {
-
+  useEffect(()=>{
+    localStorage.setItem('watched', JSON.stringify([]))
+  })
   let [shoes, setShoes] = useState(data);
   let [stock, setStock] = useState([10,11,12]);
   let [originData] = useState(data);
@@ -19,7 +21,7 @@ function App() {
   let [num, setNum] = useState(2);
   let [show, setShow] = useState(true);
   let [loading, setLoading] = useState(<Spinner animation="border" />);
-
+  
   return (
     <>
       <div>
@@ -42,18 +44,18 @@ function App() {
         </Navbar>
         <Link to = "/event"></Link>
 {/* ------라우터------ */}
-        <button onClick={()=>{
-          let copy = [...shoes];
-          copy.sort((a,b)=> a.title.toUpperCase() < b.title.toUpperCase()? -1 : 1);
-          setShoes(copy);
-        }}
-        >가나다순 정렬</button>
-        <button onClick={()=>{
-          setShoes(originData);
-        }}>되돌리기</button>
         <Routes>
           <Route path="/" element={
             <div>
+              <button onClick={()=>{
+                let copy = [...shoes];
+                copy.sort((a,b)=> a.title.toUpperCase() < b.title.toUpperCase()? -1 : 1);
+                setShoes(copy);
+              }}
+              >가나다순 정렬</button>
+              <button onClick={()=>{
+                setShoes(originData);
+              }}>되돌리기</button>
               <div className="main-bg"></div>
                 <div className="image-gallery">
                   {shoes.map(function(a, i) {

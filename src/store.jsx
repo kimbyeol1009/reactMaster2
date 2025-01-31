@@ -28,21 +28,22 @@ let cart = createSlice({
         {id : 2, name : 'Grey Yordan', count : 1}
       ],
       reducers:{
-          changeCnt(state, action){
+          addCnt(state, action){
               let item = state.find((item)=>item.id===action.payload)
               item.count+=1
           },
-          changeCartCnt(state, action){
+          addCartCnt(state, action){
             let {id,name,count} = action.payload
             let item = state.find((item)=>item.id===id)
-            item.count += count
+            if(item){item.count += count}
+            else {state.push({id,name,count})}
         },
         removeItem(state,action){
             return state.filter((item)=>item.id!==action.payload)
         }
       }
 })
-export let {changeCnt,changeCartCnt,removeItem} = cart.actions
+export let {addCnt,addCartCnt,removeItem} = cart.actions
 
 export default configureStore({
     reducer:{
