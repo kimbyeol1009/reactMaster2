@@ -7,10 +7,21 @@ import { addCartCnt, addCnt } from '../store';
 function Detail(props){
     let [num, setNum] = useState('');
     let [fade2, setFade2] = useState('');
+    let a = useSelector((state)=>{return state});
+    let dispatch = useDispatch();
     useEffect(()=>{
         if(isNaN(num)==true){window.alert('그러지마세요'); }
         let timer = setTimeout(()=>{setAlert(alert=false);},3000)
-        setFade2('end');
+        setFade2('end')
+        /* localStorage에서 id값 저장하기 */
+        let watched = localStorage.getItem('watched')
+        watched = JSON.parse(watched)
+        watched.push(index.id)
+        localStorage.setItem('watched',JSON.stringify(watched))
+        /* 중복제거 */
+        let array = new Set(watched)
+        array = Array.from(watched)
+        localStorage.setItem('watched', JSON.stringify(watched))
         return ()=>{clearTimeout(timer); setFade2('');} //타이머 기능 제거해주는 함수이다. return은 기존코드 치워주는건데 백만개 생성될 타이머 밀고 useEffect실행해주세요
     }
     , [num])
@@ -20,8 +31,7 @@ function Detail(props){
     let {id} =  useParams();
     let index =props.shoe.find( function(i){return i.id == id});
     let [tab, setTab] = useState(0);
-    let a = useSelector((state)=>{return state});
-    let dispatch = useDispatch();
+    
       
     return (
         <div className={`container start ${fade2}`}>

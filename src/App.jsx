@@ -11,17 +11,12 @@ import Cart from './routes/Cart';
 export let Context1 = createContext();
 
 function App() {
-  useEffect(()=>{
-    localStorage.setItem('watched', JSON.stringify([]))
-  })
   let [shoes, setShoes] = useState(data);
   let [stock, setStock] = useState([10,11,12]);
   let [originData] = useState(data);
   let navigate = useNavigate();
   let [num, setNum] = useState(2);
   let [show, setShow] = useState(true);
-  let [loading, setLoading] = useState(<Spinner animation="border" />);
-  
   return (
     <>
       <div>
