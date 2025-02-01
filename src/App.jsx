@@ -1,14 +1,15 @@
-import { createContext, useEffect, useState } from 'react'
+import { Suspense, lazy , createContext, useEffect, useState } from 'react'
 import './App.css'
 import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
-import Detail from './routes/Detail';
 import Event from './routes/Event';
 import {Routes, Route, Link ,useNavigate, Outlet} from 'react-router-dom';
 import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
-import Cart from './routes/Cart';
+import { useQuery } from 'react-query';
 export let Context1 = createContext();
+let Detail = lazy(()=>import('./routes/Detail'));
+let Cart =lazy(()=>import('./routes/Cart'));
 
 function App() {
   let [shoes, setShoes] = useState(data);
@@ -17,6 +18,15 @@ function App() {
   let navigate = useNavigate();
   let [num, setNum] = useState(2);
   let [show, setShow] = useState(true);
+
+  let result = useQuery('작명', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json')
+    .then((a)=>{
+      console.log('요청됨')
+      return a.data})
+  )
+
+
   return (
     <>
       <div>
@@ -29,16 +39,19 @@ function App() {
               <Link className="linkButton" to="/">홈</Link>
               <Link className="linkButton" to="/detail">Detail</Link>
               <Link className="linkButton" to="/cart">cart</Link>
-
-              
-              {/* 
-              navigate함수임! : 페이지를 이동시켜준다
+              {/* navigate함수임! : 페이지를 이동시켜준다
               <button onClick={()=>{navigate('/detail')}} className="linkButton">Detail</button> */}
+            </Nav>
+            <Nav className="ms-auto" style={{color:"white"}}>
+              {result.isLoading && '로딩중'}
+              {result.error && '에러남'}
+              {result.data && '환영합니다 ! '+result.data.name+'님😊'}
             </Nav>
           </Container>
         </Navbar>
         <Link to = "/event"></Link>
 {/* ------라우터------ */}
+      <Suspense fallback={<div>로딩중임!</div>}>
         <Routes>
           <Route path="/" element={
             <div>
@@ -133,7 +146,7 @@ function App() {
 
           <Route path="/cart" element={<Cart/>}></Route>
         </Routes>
-
+      </Suspense>
       
     </div>
     </>

@@ -9,19 +9,23 @@ function Detail(props){
     let [fade2, setFade2] = useState('');
     let a = useSelector((state)=>{return state});
     let dispatch = useDispatch();
+
+    let [recent, setRecent] = useState([]);
     useEffect(()=>{
         if(isNaN(num)==true){window.alert('그러지마세요'); }
         let timer = setTimeout(()=>{setAlert(alert=false);},3000)
         setFade2('end')
-        /* localStorage에서 id값 저장하기 */
+        //최근본상품 id localStorage에 저장하는 코드
         let watched = localStorage.getItem('watched')
-        watched = JSON.parse(watched)
+        watched = watched ? watched = JSON.parse(watched) :[]
         watched.push(index.id)
-        localStorage.setItem('watched',JSON.stringify(watched))
-        /* 중복제거 */
-        let array = new Set(watched)
-        array = Array.from(watched)
+        watched.unshift(index.id)
+
+        //Set으로 바꿨다가 다시 array로 만들기
+        watched = new Set(watched)
+        watched = Array.from(watched)
         localStorage.setItem('watched', JSON.stringify(watched))
+        setRecent(watched);
         return ()=>{clearTimeout(timer); setFade2('');} //타이머 기능 제거해주는 함수이다. return은 기존코드 치워주는건데 백만개 생성될 타이머 밀고 useEffect실행해주세요
     }
     , [num])
@@ -31,8 +35,6 @@ function Detail(props){
     let {id} =  useParams();
     let index =props.shoe.find( function(i){return i.id == id});
     let [tab, setTab] = useState(0);
-    
-      
     return (
         <div className={`container start ${fade2}`}>
         {alert==true ?  <div className="alert alert-warning my-3 ">{count}초이내 구매시 할인</div> : null}
@@ -51,6 +53,15 @@ function Detail(props){
                     setModal(modal=true);
                     setTimeout(()=>{setModal(modal=false)},3000);
                 }}>주문하기</button>
+                {/* 최근 본 상품 ui만들기 */}
+                <div className='cartBox'>
+                  <p className='topBox'>Cart</p>
+                  <p style={{textAlign:'center'}}>최근 본 상품</p>
+                  {recent.map(function(a,i){ return(<div key={i} className='recent-content'>
+                  <img src={`https://codingapple1.github.io/shop/shoes${Number(a)+1}.jpg`} width="100%" height="100%" alt="nope" />
+                  </div>)})}
+
+                </div>
                 {
                   modal == true ? <div className="alert alert-light my-3 col-6">{index.title}가 장바구니에 담겼습니다!</div> : null
                 }
