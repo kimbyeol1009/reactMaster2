@@ -1,4 +1,4 @@
-import { Suspense, lazy , createContext, useEffect, useState, useTransition } from 'react'
+import { Suspense, lazy , createContext, useEffect, useState, useTransition, useRef } from 'react'
 import './App.css'
 import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
@@ -22,7 +22,7 @@ function App() {
   let result = useQuery('작명', ()=>
     axios.get('https://codingapple1.github.io/userdata.json')
     .then((a)=>{
-      console.log('요청됨')
+      console.log('유저이름요청됨')
       return a.data})
   )
 
@@ -30,9 +30,7 @@ function App() {
   return (
     <>
       <div>
-{/* ------navbar------ */}
-
-        <Navbar bg="black" data-bs-theme="dark">
+         <Navbar bg="black" data-bs-theme="dark">
           <Container>
             <Navbar.Brand href="#home">React Store</Navbar.Brand>
             <Nav className="me-auto">
@@ -50,9 +48,10 @@ function App() {
           </Container>
         </Navbar>
         <Link to = "/event"></Link>
+
 {/* ------라우터------ */}
       <Suspense fallback={<div>로딩중임!</div>}>
-<Example/>
+          <Age/>
         <Routes>
           <Route path="/" element={
             <div>
@@ -178,24 +177,26 @@ function Card(props){
     )
   }
 
-  function Example(){
-    let [name, setName] = useState('')
-    let a = new Array(10000).fill(0)
-    let [isPending, startTransition] = useTransition()
-    return(
+  function Age(){
+    let [count, setCount] = useState(0);
+    let [age, setAge] = useState(20);
+    const isMounted = useRef(false);
+    useEffect(()=>{
+      if(count<3&&isMounted.current){
+        setAge(age+1)
+      }else{
+        isMounted.current=true;
+      }
+    },[count])
+    return (
       <div>
-        <input onChange={(e)=>{
-          startTransition(()=>{
-            setName(e.target.value)
-          })
-
-          }}/>
-        {
-          a.map(()=>{
-            return <div>{name}</div>
-          })
+        <div>안녕하십니까 전 {age}</div>
+        <button onClick={()=>{
+          setCount(count+1)
         }
+          }>누르면한살먹기</button>
       </div>
     )
+  
   }
 export default App;

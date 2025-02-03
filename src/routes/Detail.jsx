@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCartCnt, addCnt } from '../store';
+import useLike from '../hooks/useLike';
 
 function Detail(props){
+    let [like, addLike] = useLike();
     let [num, setNum] = useState('');
     let [fade2, setFade2] = useState('');
     let a = useSelector((state)=>{return state});
     let dispatch = useDispatch();
-
     let [recent, setRecent] = useState([]);
     useEffect(()=>{
         if(isNaN(num)==true){window.alert('그러지마세요'); }
@@ -52,7 +53,8 @@ function Detail(props){
                     dispatch(addCartCnt({id : index.id,name : index.title, count : Number(num)}));
                     setModal(modal=true);
                     setTimeout(()=>{setModal(modal=false)},3000);
-                }}>주문하기</button>
+                }}>주문하기</button><br/>
+                {like} <span onClick={()=>{addLike()}}>❤️</span>
                 {/* 최근 본 상품 ui만들기 */}
                 <div className='cartBox'>
                   <p className='topBox'>Cart</p>
