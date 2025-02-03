@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, React, useState} from 'react'
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import {addCnt, removeItem } from '../store';
@@ -6,7 +6,6 @@ import {addCnt, removeItem } from '../store';
 const Cart = () => {
   let a = useSelector((state)=>{return state})
   let dispatch = useDispatch();
-  
   return (
     <div>
       <Table striped bordered hover>

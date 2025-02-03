@@ -1,4 +1,4 @@
-import { Suspense, lazy , createContext, useEffect, useState } from 'react'
+import { Suspense, lazy , createContext, useEffect, useState, useTransition } from 'react'
 import './App.css'
 import {Navbar, Container, Nav,} from 'react-bootstrap';
 import data from './data';
@@ -52,6 +52,7 @@ function App() {
         <Link to = "/event"></Link>
 {/* ------라우터------ */}
       <Suspense fallback={<div>로딩중임!</div>}>
+<Example/>
         <Routes>
           <Route path="/" element={
             <div>
@@ -165,8 +166,6 @@ function About(){
   )
 }
 
-
-
 function Card(props){
     return(
       <div className="col-md-4">
@@ -179,4 +178,24 @@ function Card(props){
     )
   }
 
+  function Example(){
+    let [name, setName] = useState('')
+    let a = new Array(10000).fill(0)
+    let [isPending, startTransition] = useTransition()
+    return(
+      <div>
+        <input onChange={(e)=>{
+          startTransition(()=>{
+            setName(e.target.value)
+          })
+
+          }}/>
+        {
+          a.map(()=>{
+            return <div>{name}</div>
+          })
+        }
+      </div>
+    )
+  }
 export default App;
